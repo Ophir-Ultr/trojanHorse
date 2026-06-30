@@ -6,12 +6,13 @@ import sqlite3
 import os
 def client_connection():
     context = ssl.create_default_context()
+    context.load_cert_chain(certfile="server.crt", keyfile="server.key")
     server = socket.socket()
     secure_server = context.wrap_socket(server, server_side= True)
-    secure_server.bind("0.0.0.0", 9999)
+    secure_server.bind(("0.0.0.0", 9999))
     secure_server.listen(1)
     print("Waiting for connection...")
-    conn, addr = server.accept()
+    conn, addr = secure_server.accept()
     print("Connected from: ", addr)
     secret_key = create_secret_key(addr)
     store_key_in_DB(addr, secret_key)
