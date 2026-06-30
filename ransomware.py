@@ -61,19 +61,18 @@ def decrypt_file(input_file_path, key):
     write_file(input_file_path, decrypted_data.encode())
 
 
-def process_directory(dirpath, key):
+def encrypt_directory(dirpath, key):
     for item in os.listdir(dirpath):
         fullpath = os.join(dirpath, item)
         if os.path.isdir(fullpath):
-            process_directory(fullpath)
+            encrypt_directory(fullpath)
         elif os.path.isfile(fullpath):
             encrypt_file(fullpath, key)
                  
-
-if __name__ == "__main__":
-    # encrypted_data = encrypt_data("Hello World", "kuskus")
-    # print("encrypted data:", encrypted_data)
-    # decrypt_data(encrypted_data, "kuskus")
-    encrypted_file_path = "C:\\Users\\danie\\OneDrive\\Documents\\scripts\\gama\\gama\\testtext2.txt"
-    # encrypt_file(encrypted_file_path, "kuskus")
-    decrypt_file(encrypted_file_path, "kuskus")
+def decrypt_directory(dirpath, key):
+    for item in os.listdir(dirpath):
+        fullpath = os.join(dirpath, item)
+        if os.path.isdir(fullpath):
+            decrypt_directory(fullpath)
+        elif os.path.isfile(fullpath):
+            decrypt_file(fullpath, key)

