@@ -19,7 +19,7 @@ def unpad(padded: bytes, block_size: int = 16) -> bytes:
 
 
 def encrypt_data(plaintext, key):
-        key = hashlib.sha256(key.encode()).digest()  # Derive a 256-bit key from the password
+        #key = hashlib.sha256(key.encode()).digest()  # Derive a 256-bit key from the password, but not needed because of os.urandom(32)
 
         iv = Random.new().read(AES.block_size) # Initialization vector
         cipher = AES.new(key, AES.MODE_CBC, iv)
@@ -28,7 +28,7 @@ def encrypt_data(plaintext, key):
         return iv + cipher.encrypt(raw)
 
 def decrypt_data(ciphertext, key):
-        key = hashlib.sha256(key.encode()).digest()  # Derive a 256-bit key from the password
+        #key = hashlib.sha256(key.encode()).digest()  # Derive a 256-bit key from the password, but not needed because of os.urandom(32)
 
         iv = ciphertext[:AES.block_size]
         data = ciphertext[AES.block_size:]
@@ -62,17 +62,25 @@ def decrypt_file(input_file_path, key):
 
 
 def encrypt_directory(dirpath, key):
-    for item in os.listdir(dirpath):
-        fullpath = os.join(dirpath, item)
-        if os.path.isdir(fullpath):
-            encrypt_directory(fullpath)
-        elif os.path.isfile(fullpath):
-            encrypt_file(fullpath, key)
+    try:
+        for item in os.listdir(dirpath):
+            fullpath = os.path.join(dirpath, item)
+            if os.path.isdir(fullpath):
+                encrypt_directory(fullpath, key)
+            elif os.path.isfile(fullpath):
+                encrypt_file(fullpath, key)
+        print("Successfully encrypted the directory!")
+    except FileNotFoundError:
+        print(f"Error: The directory '{dirpath}' does not exist.")
                  
 def decrypt_directory(dirpath, key):
-    for item in os.listdir(dirpath):
-        fullpath = os.join(dirpath, item)
-        if os.path.isdir(fullpath):
-            decrypt_directory(fullpath)
-        elif os.path.isfile(fullpath):
-            decrypt_file(fullpath, key)
+    try:
+        for item in os.listdir(dirpath):
+            fullpath = os.path.join(dirpath, item)
+            if os.path.isdir(fullpath):
+                decrypt_directory(fullpath, key)
+            elif os.path.isfile(fullpath):
+                decrypt_file(fullpath, key)
+        print("Successfully decrypted the directory!")
+    except FileNotFoundError:
+        print(f"Error: The directory '{dirpath}' does not exist.")   

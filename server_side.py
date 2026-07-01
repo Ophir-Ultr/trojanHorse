@@ -4,6 +4,7 @@ import random
 import mysql.connector
 import sqlite3
 import os
+import time
 def client_connection():
     context = ssl.create_default_context()
     context.load_cert_chain(certfile="server.crt", keyfile="server.key")
@@ -15,8 +16,9 @@ def client_connection():
     conn, addr = secure_server.accept()
     print("Connected from: ", addr)
     secret_key = create_secret_key(addr)
+    print("The randomly generated secret key is: " + secret_key)
     store_key_in_DB(addr, secret_key)
-    conn.sendall(secret_key.encode())      
+    conn.sendall(secret_key.encode())
 
 def create_secret_key(client_ip):
     random_key = os.urandom(32) # 32 bytes for aes key length
@@ -73,4 +75,4 @@ def store_key_in_DB(adrr,key):
 if __name__ == "__main__":
     client_connection()
     secret_key = get_key()
-    print("The secret key is: ")
+    

